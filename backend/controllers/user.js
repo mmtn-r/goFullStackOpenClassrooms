@@ -5,7 +5,7 @@ const jwt = require('jsonwebtoken');
 exports.signup = (req, res, next) => {
   bcrypt
     .hash(req.body.password, 10)
-    .then((hash) => {
+    .then(hash => {
       const user = new User({
         email: req.body.email,
         password: hash,
@@ -13,20 +13,20 @@ exports.signup = (req, res, next) => {
       user
         .save()
         .then(() => res.status(201).json({ message: 'Utilisateur créé' }))
-        .catch((error) => res.status(400).json({ error }));
+        .catch(error => res.status(400).json({ error }));
     })
-    .catch((error) => res.status(500).json({ error }));
+    .catch(error => res.status(500).json({ error }));
 };
 
 exports.login = (req, res, next) => {
   User.findOne({ email: req.body.email })
-    .then((user) => {
+    .then(user => {
       if (!user) {
         return res.status(401).json({ error: 'Utilisateur non trouvé' });
       }
       bcrypt
         .compare(req.body.password, user.password)
-        .then((valid) => {
+        .then(valid => {
           if (!valid) {
             return res.status(401).json({ error: 'Mot de passe incorrect' });
           }
@@ -37,7 +37,7 @@ exports.login = (req, res, next) => {
             }),
           });
         })
-        .catch((error) => res.status(500).json({ error }));
+        .catch(error => res.status(500).json({ error }));
     })
-    .catch((error) => res.status(500).json({ error }));
+    .catch(error => res.status(500).json({ error }));
 };
